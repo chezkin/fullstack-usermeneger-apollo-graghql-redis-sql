@@ -1,12 +1,7 @@
 import { get, set } from "../utils/redis";
 import { UserInterface as User } from "../types/UserInterface";
 import pubsub from "../pubsub/pubsub";
-import {
-    cpuData,
-    regionData,
-    messageData,
-    trafficData,
-} from "../utils/generator";
+
 import { RedisKey } from "ioredis";
 
 import userService from "../serviec/userService";
@@ -16,16 +11,11 @@ import { registerUserValidation } from "../utils/validations/userValidation";
 
 
 const COMPONENTS = {
-    CPU: "cpu",
-    TRAFFIC: "traffic",
-    DISTRIBUTION: "distribution",
-    MESSAGES: "messages",
+    users: 'users'
 };
 
 
-const publishRandomData = async (generator: { (): { percentage: number; }; (): any; }, component: any) => {
-    const data = generator();
-    pubsub.publish(component, { [component]: data });
+const setdataonredis = async (data : any, component: any) => {
     await set(component, data);
     return data;
 };
@@ -35,6 +25,7 @@ const resolvers = {
     Query: {
         users: async () => {
             const users = await userService.getAllUsers();
+            await setdataonredis(users, COMPONENTS.users)
             return users;
         },
         userByEmail: async (_: any, args: User) => {
@@ -65,8 +56,8 @@ const resolvers = {
         },
     },
     Subscription: {
-        cpu: {
-            subscribe: () => pubsub.asyncIterator(COMPONENTS.CPU)
+        users: {
+            subscribe: () => pubsub.asyncIterator(COMPONENTS.users)
         },
     }
 }

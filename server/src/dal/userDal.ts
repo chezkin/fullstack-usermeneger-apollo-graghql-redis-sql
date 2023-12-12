@@ -27,7 +27,8 @@ const registerUser = async (user: User) => {
     try {
         client = await postgresPool.connect();
         try {
-            const { rows } = await client.query(`INSERT INTO users (id, name, email, password, isadmin) VALUES ($1, $2, $3, $4, $5) RETURNING *`, [user.id, user.name, user.email, user.password, user.isadmin]);
+            const { rows } = await client.query(`INSERT INTO users (id, firstname, lastname, email, password, isadmin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+             [user.id, user.firsname, user.lastname, user.email, user.password, user.isadmin]);
             return rows[0];
         } catch (queryError) {
             throw new GraphQLError( `${queryError} 'Something went wrong, stack: 1'` ,{extensions:{code: 'INTERNAL_SERVER_ERROR',http:{status: 500}}});
@@ -83,7 +84,8 @@ const updateUser = async (userID: string, user: User) => {
     try {
         client = await postgresPool.connect();
         try {
-            const { rows } = await client.query("UPDATE users SET name = $1, email = $2, password = $3, isadmin = $4 WHERE id = $5 RETURNING *", [user.name, user.email, user.password, user.isadmin, userID]);
+            const { rows } = await client.query("UPDATE users SET firstname = $1, email = $2, password = $3, isadmin = $4, lastname = $5 WHERE id = $6 RETURNING *",
+             [user.firsname, user.email, user.password, user.isadmin, user.lastname, userID]);
             return rows[0];
         } catch (queryError) {
             throw new GraphQLError(`Something went wrong, stack: 1 - ${queryError}`
