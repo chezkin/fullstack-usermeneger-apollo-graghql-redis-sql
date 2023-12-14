@@ -1,10 +1,16 @@
-import pkg from 'pg';
-const { Pool } = pkg;
+import { Pool } from 'pg';
 
-const connectionString = process.env.PG_URI;
+const connect = {
+    user: process.env.PG_USER!,
+    password: process.env.PG_PASSWORD!,
+    host: process.env.PG_HOST!,
+    port: Number(process.env.PG_PORT!),
+    database: 'db',
+}
 
+console.log('connect', connect);
 
-const postgresPool = new Pool({ connectionString });
+const postgresPool = new Pool(connect)
 
 
 export default postgresPool

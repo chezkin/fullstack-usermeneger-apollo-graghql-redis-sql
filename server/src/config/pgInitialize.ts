@@ -18,7 +18,8 @@ export const creatTableToPostgres = async () => {
             lastname VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
-            isadmin BOOLEAN NOT NULL
+            isadmin BOOLEAN NOT NULL,
+            UNIQUE(email)
         );
     `);
 
@@ -33,18 +34,19 @@ export const initializeUserData = async () => {
     // Insert initial user data if needed
     // Example: create an admin user
     const adminUser = {
-        name: 'Admin',
+        firstname: 'admin',
+        lastname: 'admin',
         email: 'admin@example.com',
         password: 'adminpassword',
         isadmin: true
     };
 
     await client.query(`
-        INSERT INTO users (name, email, password, isadmin)
-        VALUES ($1, $2, $3, $4)
-        ON CONFLICT (email) DO NOTHING;
-    `, [adminUser.name, adminUser.email, adminUser.password, adminUser.isadmin]);
-
+        INSERT INTO users (firstname, lastname, email, password, isadmin)
+        VALUES ($1, $2, $3, $4, $5)
+        
+    `, [adminUser.firstname, adminUser.lastname, adminUser.email, adminUser.password, adminUser.isadmin]);
+    
     client.release();
     console.log("User data initialized");
 };

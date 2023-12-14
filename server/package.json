@@ -22,7 +22,9 @@
   "main": "./dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node ."
+    "build": "tsc",
+    "start": "node .",
+    "dev": "tsc && node ."
   },
   "keywords": [],
   "author": "",

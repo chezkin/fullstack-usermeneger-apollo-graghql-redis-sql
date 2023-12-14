@@ -1,6 +1,17 @@
 import Redis, { RedisKey } from "ioredis";
 
-const redis = new Redis();
+const connect = {
+    port: Number(process.env.REDIS_PORT!),
+    host: process.env.REDIS_HOST!,
+    // username: process.env.PG_USER!,
+    // password: process.env.PG_PASSWORD!,
+    // database: 'users',
+}
+
+
+
+
+const redis = new Redis(connect.port, connect.host);
 
 const get = async (key: RedisKey) => {
     try {

@@ -19,6 +19,12 @@ input UsersInput {
   isadmin: Boolean!
 } 
 
+type Query {
+  users: [User!]!
+  userByID(id: ID!): User!
+  userByEmail(email: String!): User!
+}
+
 type Mutation {
   registerUser(id: ID, firstname: String!, lastname: String!, email: String!, password: String!, isadmin: Boolean!): User
   updateUser(user: UsersInput): User

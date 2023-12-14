@@ -15,7 +15,7 @@ const COMPONENTS = {
 };
 
 
-const setdataonredis = async (data : any, component: any) => {
+const setDataOnRedis = async (data : any, component: any) => {
     await set(component, data);
     return data;
 };
@@ -25,7 +25,7 @@ const resolvers = {
     Query: {
         users: async () => {
             const users = await userService.getAllUsers();
-            await setdataonredis(users, COMPONENTS.users)
+            await setDataOnRedis(users, COMPONENTS.users)
             return users;
         },
         userByEmail: async (_: any, args: User) => {
