@@ -11,6 +11,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { expressMiddleware } from "@apollo/server/express4";
 import bodyParser from 'body-parser';
 import cors from "cors";
+import { creatTableToPostgres, initializeUserData } from "./config/pgInitialize";
 
 
 const port = 4000;
@@ -55,7 +56,10 @@ const wsServerCleanup = useServer({ schema }, wsServer);
     app.use("/graphql", bodyParser.json(), expressMiddleware(apolloServer));
 })();
 
-httpServer.listen(port, () => {
-    console.log(`🚀 Query endpoint ready at http://localhost:${port}/graphql`);
-    console.log( `🚀 Subscription endpoint ready at ws://localhost:${port}/graphql`);
-});
+
+initializeUserData().then(() => {
+    httpServer.listen(port, () => {
+        console.log(`🚀 Query endpoint ready at http://localhost:${port}/graphql`);
+        console.log(`🚀 Subscription endpoint ready at ws://localhost:${port}/graphql`);
+    });
+}).catch(err => console.log(err));
