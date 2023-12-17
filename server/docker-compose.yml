@@ -35,7 +35,7 @@ services:
     ports:
       - 4000:4000
     environment:
-      NODE_ENV: production
+      # NODE_ENV: production
       PG_HOST: db
       PG_PORT: 5432
       PG_USER: postgres

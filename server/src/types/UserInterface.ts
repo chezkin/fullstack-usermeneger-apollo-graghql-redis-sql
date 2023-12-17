@@ -5,4 +5,5 @@ export type UserInterface = {
     email: string;
     password: string;
     isadmin: boolean;
+    login?: boolean
 } 
