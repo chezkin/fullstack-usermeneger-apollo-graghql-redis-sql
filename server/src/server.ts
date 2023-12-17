@@ -56,10 +56,10 @@ const wsServerCleanup = useServer({ schema }, wsServer);
     await apolloServer.start();
     app.use("/graphql", bodyParser.json(), expressMiddleware(apolloServer));
 })();
-
+   
 const initServer = async () => {
     try {
-        await initializeUserData()
+        // await initializeUserData()
         await setAllUsers()
         httpServer.listen(port, () => {
             console.log(`🚀 Query endpoint ready at http://localhost:${port}/graphql`);
