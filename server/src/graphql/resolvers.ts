@@ -1,4 +1,4 @@
-import { get, set } from "../utils/redis";
+import { getAllUsers, register, login, logout, deleteUser } from "../redis/redisUsers";
 import { UserInterface as User } from "../types/UserInterface";
 import pubsub from "../pubsub/pubsub";
 
@@ -11,21 +11,20 @@ import { registerUserValidation } from "../utils/validations/userValidation";
 
 
 const COMPONENTS = {
-    users: 'users'
+    users: 'user:*:*'
 };
 
 
-const setDataOnRedis = async (data : any, component: any) => {
-    await set(component, data);
-    return data;
-};
+// const setDataOnRedis = async (data : any, component: any) => {
+//     await set(component, data);
+//     return data;
+// };
 
 
 const resolvers = {
     Query: {
         users: async () => {
-            const users = await userService.getAllUsers();
-            await setDataOnRedis(users, COMPONENTS.users)
+            const users = await getAllUsers();
             return users;
         },
         userByEmail: async (_: any, args: User) => {
@@ -37,14 +36,14 @@ const resolvers = {
     Mutation: {
         registerUser: async (_: any, args: User) => {
             console.log(args);
+            // const validUser = registerUserValidation(args);
+            // console.log(validUser);
             
-            const validUser = registerUserValidation(args);
-            console.log(validUser);
-            
-            if (!validUser) {
-                throw new GraphQLError('Invalid registration user',{extensions:{http:{status: 500}}})};
-            const newUser = await userService.registerUser(args);
-            return newUser;
+            // if (!validUser) {
+            //     throw new GraphQLError('Invalid registration user',{extensions:{http:{status: 500}}})};
+            // const newUser = await userService.registerUser(args);
+            const inRedis = await register(args)
+            return inRedis;
         },
         updateUser: async (_: any, user: User) => {
             const updatedUser = await userService.updateUser(user.id!, user);
