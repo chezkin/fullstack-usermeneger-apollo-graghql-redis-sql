@@ -48,7 +48,7 @@ services:
       - db
       - cache
     volumes:
-      - ./src:/src
+      - ./src:/app/src
 volumes:
   db:
     driver: local
