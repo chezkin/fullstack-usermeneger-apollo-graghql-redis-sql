@@ -12,7 +12,7 @@ const registerUserValidation = (user: UserInterface) => {
                 'string.email': `user "email" must be a valid email`,
                 'any.required': `user "email" is a required field`,
             }),
-        password:Joi.string()
+        password: Joi.string()
             .required()
             //.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=.{7,20}$)/)
             .messages({
@@ -20,7 +20,9 @@ const registerUserValidation = (user: UserInterface) => {
                 'any.required': `user "password" is a required field`,
                 //'string.pattern.base': `user "password" must be between 7 and 20 characters, contain at least one numeric digit, one uppercase and one lowercase letter, and one special character`,
             }),
-        name: Joi.string()
+        firstname: Joi.string()
+            .required(),
+        lastname: Joi.string()
             .required(),
         isadmin: Joi.boolean()
             .required()
@@ -38,7 +40,7 @@ const loginUserValidation = (user: UserInterface) => {
                 'string.email': `user "email" must be a valid email`,
                 'any.required': `user "email" is a required field`,
             }),
-        password:Joi.string()
+        password: Joi.string()
             .required()
             //.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=.{7,20}$)/)
             .messages({
@@ -46,8 +48,8 @@ const loginUserValidation = (user: UserInterface) => {
                 'any.required': `user "password" is a required field`,
                 //'string.pattern.base': `user "password" must be between 7 and 20 characters, contain at least one numeric digit, one uppercase and one lowercase letter, and one special character`,
             }),
-        });
-        return schema.validate(user)
-    };
+    });
+    return schema.validate(user)
+};
 
-export {registerUserValidation,loginUserValidation};
+export { registerUserValidation, loginUserValidation };

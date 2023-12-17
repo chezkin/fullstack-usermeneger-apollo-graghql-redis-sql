@@ -8,8 +8,6 @@ const connect = {
     database: 'db',
 }
 
-console.log('connect', connect);
-
 const postgresPool = new Pool(connect)
 
 

@@ -25,6 +25,8 @@ const resolvers = {
     Query: {
         users: async () => {
             const users = await getAllUsers();
+            console.log('Query get all users', users);
+            
             return users;
         },
         userByEmail: async (_: any, args: User) => {
@@ -34,15 +36,15 @@ const resolvers = {
         },
     },
     Mutation: {
-        registerUser: async (_: any, args: User) => {
-            console.log(args);
-            // const validUser = registerUserValidation(args);
-            // console.log(validUser);
+        registerUser: async (_: any, args:{user : User}) => {
+            console.log('args.user',args.user);
+            const validUser = registerUserValidation(args.user);
+            console.log(validUser);
             
-            // if (!validUser) {
-            //     throw new GraphQLError('Invalid registration user',{extensions:{http:{status: 500}}})};
-            // const newUser = await userService.registerUser(args);
-            const inRedis = await register(args)
+            if (!validUser) {
+                throw new GraphQLError('Invalid registration user',{extensions:{http:{status: 500}}})};
+            const newUser : User = await userService.registerUser(args.user);
+            const inRedis = await register(newUser)
             return inRedis;
         },
         updateUser: async (_: any, user: User) => {

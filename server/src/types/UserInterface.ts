@@ -1,6 +1,6 @@
 export type UserInterface = {
     id?: string;
-    firsname: string;
+    firstname: string;
     lastname: string;
     email: string;
     password: string;

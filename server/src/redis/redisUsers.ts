@@ -48,6 +48,7 @@ const register = async (user: UserInterface) => {
         return false;
     }
 };
+
 const deleteUser = async (user: UserInterface) => {
     const key: RedisKey = `user:${user.id}:${user.isadmin}`
     try {

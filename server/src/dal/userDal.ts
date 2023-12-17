@@ -3,22 +3,30 @@ import postgresPool from '../config/pgConnect'
 import { UserInterface as User } from '../types/UserInterface';
 
 const getUserByEmail = async (email: string) => {
+
     let client;
     try {
-        client = await postgresPool.connect();        
+        client = await postgresPool.connect();
         try {
-            const { rows } = await client.query("SELECT * FROM users WHERE email = $1", [email]);            
-            return rows[0];
-        } catch (queryError) {  
+            const { rows } = await client.query("SELECT * FROM users WHERE email = $1", [email]);
+
+            if (rows && rows.length > 0) {
+                console.log('User found:', rows[0]);
+                return rows[0];
+            } else {
+                console.log('User not found');
+                return null;
+            }
+        } catch (queryError) {
             throw new GraphQLError('Something went wrong, stack: 1',
-            {extensions:{code: 'INTERNAL_SERVER_ERROR',http:{status: 500}}});          
+                { extensions: { code: 'INTERNAL_SERVER_ERROR', http: { status: 500 } } });
         } finally {
             client.release();
         };
-    } catch (connectionError) {    
-        if (connectionError instanceof GraphQLError) throw connectionError;      
+    } catch (connectionError) {
+        if (connectionError instanceof GraphQLError) throw connectionError;
         throw new GraphQLError('Error connecting to the database, stack: 1',
-        {extensions:{code: 'INTERNAL_SERVER_ERROR',http:{status: 500}}});
+            { extensions: { code: 'INTERNAL_SERVER_ERROR', http: { status: 500 } } });
     };
 };
 
@@ -27,17 +35,19 @@ const registerUser = async (user: User) => {
     try {
         client = await postgresPool.connect();
         try {
-            const { rows } = await client.query(`INSERT INTO users (id, firstname, lastname, email, password, isadmin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-             [user.id, user.firsname, user.lastname, user.email, user.password, user.isadmin]);
+            const { rows } = await client.query(`INSERT INTO users ( firstname, lastname, email, password, isadmin) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+                [user.firstname, user.lastname, user.email, user.password, user.isadmin]);
             return rows[0];
         } catch (queryError) {
-            throw new GraphQLError( `${queryError} 'Something went wrong, stack: 1'` ,{extensions:{code: 'INTERNAL_SERVER_ERROR',http:{status: 500}}});
+            console.log(queryError);
+
+            throw new GraphQLError(`${queryError} 'Something went wrong, stack: 1'`, { extensions: { code: 'INTERNAL_SERVER_ERROR', http: { status: 500 } } });
         } finally {
             client.release();
         };
     } catch (connectionError) {
         if (connectionError instanceof GraphQLError) throw connectionError;
-        throw new GraphQLError('Error connecting to the database, stack: 1',{extensions:{code: 'INTERNAL_SERVER_ERROR',http:{status: 500}}});
+        throw new GraphQLError('Error connecting to the database, stack: 1', { extensions: { code: 'INTERNAL_SERVER_ERROR', http: { status: 500 } } });
     };
 };
 
@@ -50,13 +60,13 @@ const getAllUsers = async () => {
             return rows;
         } catch (queryError) {
             throw new GraphQLError(`Something went wrong, stack: 1 - ${queryError}`
-            ,{extensions:{code: queryError ,http:{status: 500}}});
+                , { extensions: { code: queryError, http: { status: 500 } } });
         } finally {
             client.release();
         };
     } catch (connectionError) {
         if (connectionError instanceof GraphQLError) throw connectionError;
-        throw new GraphQLError('Error connecting to the database, stack: 1' ,{extensions:{code: connectionError,http:{status: 500}}});
+        throw new GraphQLError('Error connecting to the database, stack: 1', { extensions: { code: connectionError, http: { status: 500 } } });
     };
 };
 
@@ -69,13 +79,13 @@ const deleteUser = async (userID: string) => {
             return rows[0];
         } catch (queryError) {
             throw new GraphQLError(`Something went wrong, stack: 1 - ${queryError}`
-            ,{extensions:{code: queryError ,http:{status: 500}}});
+                , { extensions: { code: queryError, http: { status: 500 } } });
         } finally {
             client.release();
         };
     } catch (connectionError) {
         if (connectionError instanceof GraphQLError) throw connectionError;
-        throw new GraphQLError('Error connecting to the database, stack: 1' ,{extensions:{code: connectionError,http:{status: 500}}});
+        throw new GraphQLError('Error connecting to the database, stack: 1', { extensions: { code: connectionError, http: { status: 500 } } });
     };
 };
 
@@ -85,16 +95,17 @@ const updateUser = async (userID: string, user: User) => {
         client = await postgresPool.connect();
         try {
             const { rows } = await client.query("UPDATE users SET firstname = $1, email = $2, password = $3, isadmin = $4, lastname = $5 WHERE id = $6 RETURNING *",
-             [user.firsname, user.email, user.password, user.isadmin, user.lastname, userID]);
+                [user.firstname, user.email, user.password, user.isadmin, user.lastname, userID]);
             return rows[0];
         } catch (queryError) {
             throw new GraphQLError(`Something went wrong, stack: 1 - ${queryError}`
-            ,{extensions:{code: queryError ,http:{status: 500}}});        } finally {
+                , { extensions: { code: queryError, http: { status: 500 } } });
+        } finally {
             client.release();
         };
     } catch (connectionError) {
         if (connectionError instanceof GraphQLError) throw connectionError;
-        throw new GraphQLError('Error connecting to the database, stack: 1' ,{extensions:{code: connectionError,http:{status: 500}}});
+        throw new GraphQLError('Error connecting to the database, stack: 1', { extensions: { code: connectionError, http: { status: 500 } } });
     };
 };
 

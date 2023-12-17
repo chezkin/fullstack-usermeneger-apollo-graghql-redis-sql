@@ -19,16 +19,18 @@ const authUser = async (email: string, password: string) => {
 
 
 const registerUser = async (user: User) => {
+    
     const { email, password } = user;    
     const isUserRegisted = await userDal.getUserByEmail(email);
     if (isUserRegisted)
-        throw new Error(  "user already registed");
+    throw new Error( "user already registed");
 
-    const hashedPassword = await hashPassword(password);
-    user.password = hashedPassword
-    user.id = uuid();
+const hashedPassword = await hashPassword(password);
+user.password = hashedPassword
+user.id = uuid();
 
-    const newUser = await userDal.registerUser(user);
+const newUser = await userDal.registerUser(user);
+console.log('user service args:', newUser );
     if (!newUser)
         throw new Error(  "something went wrong");
     return newUser;

@@ -60,7 +60,7 @@ const wsServerCleanup = useServer({ schema }, wsServer);
 const initServer = async () => {
     try {
         // await initializeUserData()
-        await setAllUsers()
+        // await setAllUsers()
         httpServer.listen(port, () => {
             console.log(`🚀 Query endpoint ready at http://localhost:${port}/graphql`);
             console.log(`🚀 Subscription endpoint ready at ws://localhost:${port}/graphql`);
@@ -68,6 +68,6 @@ const initServer = async () => {
     } catch (e) {
         console.log(e);
         
-    }
+    } 
 }
 initServer()
