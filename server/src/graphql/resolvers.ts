@@ -1,17 +1,23 @@
-import { getAllUsers, register, login, logout, deleteUser } from "../redis/redisUsers";
+import { getAllUsers, register, login, logout, deleteUser, controlNumberInRedis } from "../redis/redisUsers";
 import { UserInterface as User } from "../types/UserInterface";
 import pubsub from "../pubsub/pubsub";
 
-import { RedisKey } from "ioredis";
+import {
+    getListDataByKeys,
+    setDataByKey,
+    getDataByKey,
+} from "../redis/redisConfig";
 
 import userService from "../serviec/userService";
 import userDal from "../dal/userDal";
-import { GraphQLError } from 'graphql';
+import { GraphQLError, valueFromAST } from 'graphql';
 import { registerUserValidation } from "../utils/validations/userValidation";
 
 
 const COMPONENTS = {
-    users: 'user:*:*'
+    newUser: 'newUser',
+    numberOfRegisteredUsers: 'numberOfRegisteredUsers',
+    numberOfConnectedUsers: 'numberOfConnectedUsers'
 };
 
 
@@ -26,7 +32,7 @@ const resolvers = {
         users: async () => {
             const users = await getAllUsers();
             console.log('Query get all users', users);
-            
+
             return users;
         },
         userByEmail: async (_: any, args: User) => {
@@ -36,19 +42,33 @@ const resolvers = {
         },
     },
     Mutation: {
-        registerUser: async (_: any, args:{user : User}) => {
-            console.log('args.user',args.user);
+        registerUser: async (_: any, args: { user: User }) => {
+            console.log('args.user', args.user);
             const validUser = registerUserValidation(args.user);
             console.log(validUser);
-            
+
             if (!validUser) {
-                throw new GraphQLError('Invalid registration user',{extensions:{http:{status: 500}}})};
-            const newUser : User = await userService.registerUser(args.user);
-            const inRedis = await register(newUser)
-            return inRedis;
+                throw new GraphQLError('Invalid registration user', { extensions: { http: { status: 500 } } })
+            };
+            const newUser: User = await userService.registerUser(args.user);
+            // שליחת המשתמש החדש שנרשם שלירות פאב 
+            pubsub.publish(COMPONENTS.newUser, { newUser: newUser });
+            // הוצאת מספר המשתמשים והוספה של אחד 
+            const numberOfRegistered = await controlNumberInRedis(COMPONENTS.numberOfRegisteredUsers, true)
+            // שליחה של מספר המשתמשים
+            pubsub.publish(COMPONENTS.numberOfRegisteredUsers, numberOfRegistered);
+            return newUser;
         },
         updateUser: async (_: any, user: User) => {
             const updatedUser = await userService.updateUser(user.id!, user);
+            return updatedUser;
+        },
+        loginUser: async (_: any, user: User) => {
+            const updatedUser = await userService.authUser(user.id!, user.email);
+            // הוצאת מספר המשתמשים הרשומים והוספה של אחד 
+            const numberOfConnected = await controlNumberInRedis(COMPONENTS.numberOfConnectedUsers, true)
+            // שליחה של מספר המשתמשים
+            pubsub.publish(COMPONENTS.numberOfConnectedUsers, numberOfConnected);
             return updatedUser;
         },
         deleteUser: async (_: any, user: User) => {
@@ -57,8 +77,11 @@ const resolvers = {
         },
     },
     Subscription: {
-        users: {
-            subscribe: () => pubsub.asyncIterator(COMPONENTS.users)
+        newUser: {
+            subscribe: () => pubsub.asyncIterator([COMPONENTS.newUser], { pattern: true })
+        },
+        numberOfConnectedUsers: {
+            subscribe: () => pubsub.asyncIterator([COMPONENTS.numberOfConnectedUsers], { pattern: true })
         },
     }
 }

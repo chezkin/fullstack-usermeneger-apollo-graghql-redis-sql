@@ -3,7 +3,6 @@ import postgresPool from '../config/pgConnect'
 import { UserInterface as User } from '../types/UserInterface';
 
 const getUserByEmail = async (email: string) => {
-
     let client;
     try {
         client = await postgresPool.connect();

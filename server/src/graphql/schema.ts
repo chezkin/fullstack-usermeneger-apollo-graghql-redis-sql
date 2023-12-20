@@ -27,12 +27,15 @@ type Query {
 
 type Mutation {
   registerUser(user: UsersInput): User
+  loginUser(user: UsersInput): User
   updateUser(user: UsersInput): User
   deleteUser(user: UsersInput): User
 }
 
   type Subscription {
-    users: [User]
+    newUser: User
+    numberOfRegisteredUsers: String
+    numberOfConnectedUsers: String
   }
 `;
 

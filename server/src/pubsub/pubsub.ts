@@ -7,7 +7,6 @@ const connect = {
     // password: process.env.PG_PASSWORD!,
     // database: 'users',
 }
-console.log("h");
 
 const pubsub = new RedisPubSub({
     connection : {

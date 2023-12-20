@@ -1,0 +1,90 @@
+[
+    {
+        "category": 1,
+        "code": "missilealert",
+        "duration": 10,
+        "label": "ירי רקטות וטילים",
+        "description1": "היכנסו למרחב המוגן ושהו בו 10 דקות",
+        "description2": "",
+        "link1": "",
+        "link2": "https://www.oref.org.il/12943-he/pakar.aspx",
+        "matrixid": 1
+    },
+    {
+        "category": 2,
+        "code": "uav",
+        "duration": 10,
+        "label": "חדירת כלי טיס עוין",
+        "description1": "היכנסו מיד למרחב המוגן ושהו בו למשך 10 דקות, אלא אם ניתנה התרעה נוספת",
+        "description2": "",
+        "link1": "",
+        "link2": "https://www.oref.org.il/12754-he/pakar.aspx",
+        "matrixid": 6
+    },
+    {
+        "category": 7,
+        "code": "earthquakealert1",
+        "duration": 10,
+        "label": "רעידת אדמה",
+        "description1": "צאו מיד לשטח פתוח. אם לא ניתן, היכנסו לממ\"ד או לחדר מדרגות",
+        "description2": "",
+        "link1": "",
+        "link2": "https://www.oref.org.il/12765-he/pakar.aspx",
+        "matrixid": 3
+    },
+    {
+        "category": 8,
+        "code": "earthquakealert2",
+        "duration": 10,
+        "label": "רעידת אדמה",
+        "description1": "צאו מיד לשטח פתוח. אם לא ניתן, היכנסו לממ\"ד או לחדר מדרגות",
+        "description2": "",
+        "link1": "",
+        "link2": "https://www.oref.org.il/12765-he/pakar.aspx",
+        "matrixid": 3
+    },
+    {
+        "category": 9,
+        "code": "cbrne",
+        "duration": 10,
+        "label": "אירוע רדיולוגי",
+        "description1": "היכנסו למבנה וסגרו את הדלתות והחלונות",
+        "description2": "",
+        "link1": "",
+        "link2": "https://www.oref.org.il/12756-he/pakar.aspx",
+        "matrixid": 4
+    },
+    {
+        "category": 10,
+        "code": "terrorattack",
+        "duration": 10,
+        "label": "חדירת מחבלים",
+        "description1": "היכנסו מיד למבנה, נעלו את הדלתות וסגרו את החלונות",
+        "description2": "",
+        "link1": "",
+        "link2": "https://www.oref.org.il/12757-he/pakar.aspx",
+        "matrixid": 13
+    },
+    {
+        "category": 11,
+        "code": "tsunami",
+        "duration": 10,
+        "label": "צונאמי",
+        "description1": "התרחקו מיד מחוף הים קילומטר אחד לפחות או עלו לקומה רביעית ומעלה",
+        "description2": "",
+        "link1": "",
+        "link2": "https://www.oref.org.il/12764-he/pakar.aspx",
+        "matrixid": 5
+    },
+    {
+        "category": 12,
+        "code": "hazmat",
+        "duration": 10,
+        "label": "אירוע חומרים מסוכנים",
+        "description1": "היכנסו מיד למבנה וסגרו את הדלתות והחלונות",
+        "description2": "",
+        "link1": "",
+        "link2": "https://www.oref.org.il/12759-he/pakar.aspx",
+        "matrixid": 7
+    }
+]
