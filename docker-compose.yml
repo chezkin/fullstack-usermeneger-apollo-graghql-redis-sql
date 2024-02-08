@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   db:
+    container_name: db-postgres
     image: postgres:14.1-alpine
     restart: always
     environment:
@@ -17,6 +18,7 @@ services:
       timeout: 25s
       retries: 3
   cache:
+    container_name: cache-redis
     image: redis:6.2-alpine
     restart: always
     ports:
@@ -24,9 +26,13 @@ services:
     command: redis-server --save 20 1 --loglevel warning 
     volumes: 
       - cache:/data
-  api:
-    container_name: quotes-api
-    build: .
+  api-server:
+    container_name: api-server
+    build: ./server
+    develop:
+      watch:
+        - action: rebuild
+          path: ./server/package.json
     depends_on:
       db:
         condition: service_healthy
@@ -48,7 +54,23 @@ services:
       - db
       - cache
     volumes:
-      - ./src:/app/src
+      - ./server/src:/app/src
+  # client:
+  #   build: ./client
+  #   develop:
+  #     watch:
+  #       - action: rebuild
+  #         path: ./client/package.json
+  #   restart: always
+  #   ports:
+  #     - '5173:5173'
+  #   links:
+  #     - api-server
+  #   volumes:
+  #     - ./client/src:/react-vite-app/src
+  #   depends_on:
+  #     api-server:
+  #       condition: service_healthy
 volumes:
   db:
     driver: local
