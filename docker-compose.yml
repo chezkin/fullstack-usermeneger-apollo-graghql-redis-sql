@@ -55,22 +55,22 @@ services:
       - cache
     volumes:
       - ./server/src:/app/src
-  # client:
-  #   build: ./client
-  #   develop:
-  #     watch:
-  #       - action: rebuild
-  #         path: ./client/package.json
-  #   restart: always
-  #   ports:
-  #     - '5173:5173'
-  #   links:
-  #     - api-server
-  #   volumes:
-  #     - ./client/src:/react-vite-app/src
-  #   depends_on:
-  #     api-server:
-  #       condition: service_healthy
+  client:
+    build: ./client
+    develop:
+      watch:
+        - action: rebuild
+          path: ./client/package.json
+    restart: always
+    ports:
+      - '8000:8000'
+    links:
+      - api-server
+    volumes:
+      - ./client/src:/react-vite-app/src
+    depends_on:
+      api-server:
+        condition: service_started
 volumes:
   db:
     driver: local

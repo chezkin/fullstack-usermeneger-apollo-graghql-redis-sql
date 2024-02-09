@@ -59,7 +59,7 @@ const wsServerCleanup = useServer({ schema }, wsServer);
    
 const initServer = async () => {
     try {
-        // await initializeUserData()
+        await initializeUserData()
         await setAllUsers()
         httpServer.listen(port, () => {
             console.log(`🚀 Query endpoint ready at http://localhost:${port}/graphql`);
